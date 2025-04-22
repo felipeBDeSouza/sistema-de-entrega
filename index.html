@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Acompanhamento de Entregas</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+   
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Acompanhamento de Entregas</h1>
+        </header>
+        
+        <div class="search-container">
+            <form class="search-form" id="searchForm">
+                <input type="text" id="searchInput" placeholder="Digite o número da entrega ou nome do cliente...">
+                <button type="submit">Pesquisar</button>
+            </form>
+        </div>
+        
+        <div class="status-tabs">
+            <div class="status-tab active" data-status="all">Todas</div>
+            <div class="status-tab" data-status="separacao">Em Separação</div>
+            <div class="status-tab" data-status="pronto">Prontas para Carregar</div>
+            <div class="status-tab" data-status="cancelada">Canceladas</div>
+        </div>
+        
+        <div class="deliveries-container">
+            <div class="delivery-column">
+                <div class="column-header">Em Separação</div>
+                <div id="separacao-list">
+                    <!-- Entregas em separação serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="delivery-column">
+                <div class="column-header">Prontas para Carregar</div>
+                <div id="pronto-list">
+                    <!-- Entregas prontas serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para detalhes da entrega -->
+    <div class="modal" id="deliveryModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Detalhes da Entrega</h2>
+            <div class="delivery-info" id="deliveryDetails">
+
+                <!-- Detalhes da entrega serão inseridos aqui via JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" id="cancelDeliveryBtn">Cancelar Entrega</button>
+                <button class="btn btn-pdf" id="generatePdfBtn">Gerar PDF</button>
+            </div>
+        </div>
+    </div>
+  
+</body>
+<footer>
+    <div class="footer-content">
+      <p>Direitos autorais Felipe © 2024 Meu Site</p>
+      <nav>
+        <ul>
+          <li><a href="#">Contato</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</html>
