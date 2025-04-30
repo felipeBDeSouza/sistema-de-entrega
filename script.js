@@ -1,4 +1,3 @@
-
 // Dados de exemplo (simulando um banco de dados)
 let deliveries = [
     {
@@ -31,6 +30,20 @@ let deliveries = [
         observacoes: 'Apartamento 32, tocar interfone'
     },
     {
+        id: 'ENT007',
+        cliente: 'Maria Oliveira',
+        endereco: 'Av. Paulista, 1000 - Bela Vista',
+        telefone: '(11) 9888-7777',
+        produtos: [
+            { nome: 'Smartphone Samsung', quantidade: 2 },
+            { nome: 'Capa protetora', quantidade: 2 }
+        ],
+        status: 'separado',
+        dataPedido: '2023-05-08',
+        dataEntregaPrevista: '2023-05-12',
+        observacoes: 'Apartamento 32, tocar interfone'
+    },
+    {
         id: 'ENT003',
         cliente: 'Carlos Souza',
         endereco: 'Rua Augusta, 500 - Consolação',
@@ -57,21 +70,6 @@ let deliveries = [
         dataPedido: '2023-05-05',
         dataEntregaPrevista: '2023-05-10',
         observacoes: 'Portão azul'
-    },
-    {
-        id: 'ENT005',
-        cliente: 'Pedro Santos',
-        endereco: 'Rua dos Pinheiros, 300 - Pinheiros',
-        telefone: '(11) 9555-4444',
-        produtos: [
-            { nome: 'Mesa escritório', quantidade: 1 },
-            { nome: 'Cadeira ergonômica', quantidade: 2 }
-        ],
-        status: 'cancelada',
-        dataPedido: '2023-05-01',
-        dataEntregaPrevista: '2023-05-08',
-        observacoes: 'Cancelado pelo cliente',
-        motivoCancelamento: 'Cliente mudou de ideia'
     }
 ];
 
@@ -103,14 +101,6 @@ function renderDeliveries(filterStatus = 'all') {
             separacaoList.appendChild(card);
         } else if (delivery.status === 'pronto') {
             prontoList.appendChild(card);
-        } else if (delivery.status === 'cancelada' && filterStatus === 'cancelada') {
-            // Mostrar canceladas apenas quando o filtro está ativo
-            const canceladaList = document.createElement('div');
-            canceladaList.innerHTML = '<div class="column-header">Canceladas</div>';
-            canceladaList.appendChild(card);
-            
-            // Adicionar à primeira coluna (poderia ser uma coluna separada)
-            separacaoList.parentNode.insertBefore(canceladaList, separacaoList.nextSibling);
         }
     });
 }
@@ -123,7 +113,6 @@ function createDeliveryCard(delivery) {
     let statusText = '';
     if (delivery.status === 'separacao') statusText = 'Em Separação';
     else if (delivery.status === 'pronto') statusText = 'Pronta para Carregar';
-    else if (delivery.status === 'cancelada') statusText = 'Cancelada';
     
     card.innerHTML = `
         <h3>${delivery.id} - ${delivery.cliente}</h3>
@@ -134,14 +123,12 @@ function createDeliveryCard(delivery) {
     
     const actions = document.createElement('div');
     actions.className = 'delivery-actions';
-    
-    if (delivery.status !== 'cancelada') {
-        const detailsBtn = document.createElement('button');
-        detailsBtn.className = 'btn btn-details';
-        detailsBtn.textContent = 'Detalhes';
-        detailsBtn.addEventListener('click', () => showDeliveryDetails(delivery));
-        actions.appendChild(detailsBtn);
-    }
+
+    const detailsBtn = document.createElement('button');
+    detailsBtn.className = 'btn btn-details';
+    detailsBtn.textContent = 'Detalhes';
+    detailsBtn.addEventListener('click', () => showDeliveryDetails(delivery));
+    actions.appendChild(detailsBtn);
     
     card.appendChild(actions);
     return card;
@@ -155,18 +142,12 @@ function showDeliveryDetails(delivery) {
     let statusText = '';
     if (delivery.status === 'separacao') statusText = 'Em Separação';
     else if (delivery.status === 'pronto') statusText = 'Pronta para Carregar';
-    else if (delivery.status === 'cancelada') statusText = 'Cancelada';
     
     let produtosHtml = '<ul>';
     delivery.produtos.forEach(produto => {
         produtosHtml += `<li>${produto.nome} (Qtd: ${produto.quantidade})</li>`;
     });
     produtosHtml += '</ul>';
-    
-    let cancelamentoHtml = '';
-    if (delivery.status === 'cancelada') {
-        cancelamentoHtml = `<p><strong>Motivo do Cancelamento:</strong> ${delivery.motivoCancelamento || 'Não informado'}</p>`;
-    }
     
     modalContent.innerHTML = `
         <p><strong>Número da Entrega:</strong> ${delivery.id}</p>
@@ -178,20 +159,7 @@ function showDeliveryDetails(delivery) {
         <p><strong>Data Prevista para Entrega:</strong> ${formatDate(delivery.dataEntregaPrevista)}</p>
         <p><strong>Produtos:</strong> ${produtosHtml}</p>
         <p><strong>Observações:</strong> ${delivery.observacoes}</p>
-        ${cancelamentoHtml}
     `;
-    
-    // Mostrar/ocultar botões conforme o status
-    const cancelBtn = document.getElementById('cancelDeliveryBtn');
-    const pdfBtn = document.getElementById('generatePdfBtn');
-    
-    if (delivery.status === 'cancelada') {
-        cancelBtn.style.display = 'none';
-        pdfBtn.textContent = 'Gerar PDF (Cancelada)';
-    } else {
-        cancelBtn.style.display = 'block';
-        pdfBtn.textContent = 'Gerar PDF para Carregamento';
-    }
     
     modal.style.display = 'flex';
 }
@@ -211,32 +179,9 @@ function searchDeliveries(query) {
     );
 }
 
-// Função para cancelar entrega
-function cancelDelivery(deliveryId, motivo) {
-    const deliveryIndex = deliveries.findIndex(d => d.id === deliveryId);
-    if (deliveryIndex !== -1) {
-        deliveries[deliveryIndex].status = 'cancelada';
-        deliveries[deliveryIndex].motivoCancelamento = motivo || 'Cancelado pelo sistema';
-        return true;
-    }
-    return false;
-}
-
 // Função para gerar PDF (simulada)
 function generatePdf(delivery) {
-    // Na implementação real, você usaria uma biblioteca como jsPDF ou pdfmake
-    // Aqui estamos apenas simulando com um alerta
     alert(`PDF gerado para a entrega ${delivery.id}\nCliente: ${delivery.cliente}\nProdutos: ${delivery.produtos.length}`);
-    
-    // Aqui você implementaria a geração real do PDF
-    // Exemplo com jsPDF:
-    /*
-    const doc = new jsPDF();
-    doc.text(`Relatório de Entrega - ${delivery.id}`, 10, 10);
-    doc.text(`Cliente: ${delivery.cliente}`, 10, 20);
-    // ... adicionar mais informações
-    doc.save(`entrega_${delivery.id}.pdf`);
-    */
 }
 
 // Event Listeners
@@ -266,28 +211,12 @@ document.querySelector('.close-modal').addEventListener('click', function() {
     modal.style.display = 'none';
 });
 
-document.getElementById('cancelDeliveryBtn').addEventListener('click', function() {
-    if (currentDelivery) {
-        const motivo = prompt('Digite o motivo do cancelamento:');
-        if (motivo !== null) {
-            if (cancelDelivery(currentDelivery.id, motivo)) {
-                alert('Entrega cancelada com sucesso!');
-                renderDeliveries();
-                modal.style.display = 'none';
-            } else {
-                alert('Erro ao cancelar entrega.');
-            }
-        }
-    }
-});
-
 document.getElementById('generatePdfBtn').addEventListener('click', function() {
     if (currentDelivery) {
         generatePdf(currentDelivery);
     }
 });
 
-// Fechar modal ao clicar fora do conteúdo
 window.addEventListener('click', function(e) {
     if (e.target === modal) {
         modal.style.display = 'none';
@@ -296,5 +225,3 @@ window.addEventListener('click', function(e) {
 
 // Inicializar a aplicação
 renderDeliveries();
-
-
