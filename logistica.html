@@ -3,136 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>logistica</title>
+    <title>Logistica</title>
     <link rel="stylesheet" href="logistica.css">
     <script src="logistica.js"defer></script>
+
 </head>
 <body>
-    <div class="container">
-        <h1>Registro da  Logística</h1>
-        
-        <div class="tab">
-            <button class="tablinks active" onclick="openTab(event, 'cadastros')">Cadastros</button>
-            <button class="tablinks" onclick="openTab(event, 'entrega')">Registrar Entrega</button>
-            <button class="tablinks" onclick="openTab(event, 'pesquisa')">Pesquisar</button>
+    <div class="sidebar">
+        <h2>Logística</h2>
+        <a href="#" onclick="mostrarTela('motorista')">Cadastro Motorista</a>
+        <a href="#" onclick="mostrarTela('caminhao')">Cadastro Caminhão</a>
+        <a href="#" onclick="mostrarTela('registro')">Registrar Entrega</a>
+        <a href="#" onclick="mostrarTela('pesquisa')">Pesquisar Entrega</a>
+      </div>
+      <div class="main">
+        <!-- Cadastro Motorista -->
+        <div id="motorista" class="tela">
+          <h2>Cadastro de Motorista</h2>
+          <div class="form-group"><label>Nome</label><input id="nomeMotorista"></div>
+          <div class="form-group"><label>CPF</label><input id="cpfMotorista"></div>
+          <div class="form-group"><label>CNH</label><input id="cnhMotorista"></div>
+          <button onclick="cadastrarMotorista()">Cadastrar</button>
+          <div id="listaMotoristas"></div>
         </div>
-        
-        <div id="cadastros" class="tabcontent" style="display: block;">
-            <div class="form-section">
-                <h2>Cadastrar Motorista</h2>
-                <div class="form-group">
-                    <label for="motoristaNome">Nome:</label>
-                    <input type="text" id="motoristaNome" required>
-                </div>
-                <div class="form-group">
-                    <label for="motoristaCPF">CPF:</label>
-                    <input type="text" id="motoristaCPF" required>
-                </div>
-                <div class="form-group">
-                    <label for="motoristaCNH">CNH:</label>
-                    <input type="text" id="motoristaCNH" required>
-                </div>
-                <button onclick="cadastrarMotorista()">Cadastrar Motorista</button>
-                <div id="motoristaMsg"></div>
-            </div>
-            
-            <div class="form-section">
-                <h2>Cadastrar Caminhão</h2>
-                <div class="form-group">
-                    <label for="caminhaoPlaca">Placa:</label>
-                    <input type="text" id="caminhaoPlaca" required>
-                </div>
-                <div class="form-group">
-                    <label for="caminhaoModelo">Modelo:</label>
-                    <input type="text" id="caminhaoModelo" required>
-                </div>
-                <div class="form-group">
-                    <label for="caminhaoAno">Ano:</label>
-                    <input type="number" id="caminhaoAno" required>
-                </div>
-                <div class="form-group">
-                    <label for="caminhaoCapacidade">Capacidade (kg):</label>
-                    <input type="number" id="caminhaoCapacidade" required>
-                </div>
-                <button onclick="cadastrarCaminhao()">Cadastrar Caminhão</button>
-                <div id="caminhaoMsg"></div>
-            </div>
-            
-            <div class="form-section">
-                <h2>Cadastros Realizados</h2>
-                <h3>Motoristas</h3>
-                <table id="tabelaMotoristas">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>CNH</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                
-                <h3>Caminhões</h3>
-                <table id="tabelaCaminhoes">
-                    <thead>
-                        <tr>
-                            <th>Placa</th>
-                            <th>Modelo</th>
-                            <th>Ano</th>
-                            <th>Capacidade</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+    
+        <!-- Cadastro Caminhão -->
+        <div id="caminhao" class="tela hidden">
+          <h2>Cadastro de Caminhão</h2>
+          <div class="form-group"><label>Placa</label><input id="placaCaminhao"></div>
+          <div class="form-group"><label>Modelo</label><input id="modeloCaminhao"></div>
+          <div class="form-group"><label>Ano</label><input id="anoCaminhao" type="number"></div>
+          <div class="form-group"><label>Capacidade (kg)</label><input id="capacidadeCaminhao" type="number"></div>
+          <button onclick="cadastrarCaminhao()">Cadastrar</button>
+          <div id="listaCaminhoes"></div>
         </div>
-        
-        <div id="entrega" class="tabcontent">
-            <div class="form-section">
-                <h2>Registrar Entrega</h2>
-                <div class="form-group">
-                    <label for="entregaCaminhao">Caminhão:</label>
-                    <select id="entregaCaminhao" required></select>
-                </div>
-                <div class="form-group">
-                    <label for="entregaMotorista">Motorista:</label>
-                    <select id="entregaMotorista" required></select>
-                </div>
-                <div class="form-group">
-                    <label for="separadorNome">Quem separou a carga:</label>
-                    <input type="text" id="separadorNome" required>
-                </div>
-                <div class="form-group">
-                    <label for="carregadorNome">Quem carregou o caminhão:</label>
-                    <input type="text" id="carregadorNome" required>
-                </div>
-                <div class="form-group">
-                    <label for="entregaDestino">Destino:</label>
-                    <input type="text" id="entregaDestino" required>
-                </div>
-                <div class="form-group">
-                    <label for="entregaProdutos">Produtos:</label>
-                    <textarea id="entregaProdutos" rows="4" style="width: 100%;" required></textarea>
-                </div>
-                <button onclick="registrarEntrega()">Registrar Entrega</button>
-                <div id="entregaMsg"></div>
-            </div>
+    
+        <!-- Registrar Entrega -->
+        <div id="registro" class="tela hidden">
+          <h2>Registrar Entrega</h2>
+          <div class="form-group"><label>Motorista</label><select id="selectMotorista"></select></div>
+          <div class="form-group"><label>Caminhão</label><select id="selectCaminhao"></select></div>
+          <div class="form-group"><label>Separador</label><input id="nomeSeparador"></div>
+          <div class="form-group"><label>Carregador</label><input id="nomeCarregador"></div>
+          <div class="form-group"><label>Destino</label><input id="destinoEntrega"></div>
+          <div class="form-group"><label>Produtos (Notas)</label><textarea id="produtosEntrega"></textarea></div>
+          <button onclick="registrarEntrega()">Registrar</button>
         </div>
-        
-        <div id="pesquisa" class="tabcontent">
-            <div class="form-section">
-                <h2>Pesquisar Entrega</h2>
-                <div class="form-group">
-                    <label for="pesquisaCaminhao">Selecione o Caminhão:</label>
-                    <select id="pesquisaCaminhao" required></select>
-                </div>
-                <button onclick="pesquisarEntrega()">Pesquisar</button>
-                
-                <div id="resultadoPesquisa" class="search-results">
-                    <!-- Resultados serão exibidos aqui -->
-                </div>
-            </div>
+    
+        <!-- Pesquisa -->
+        <div id="pesquisa" class="tela hidden">
+          <h2>Pesquisar Entrega</h2>
+          <div class="form-group"><label>Caminhão</label><select id="selectPesquisa"></select></div>
+          <button onclick="pesquisarEntrega()">Pesquisar</button>
+          <div id="resultadoEntrega"></div>
+          <button onclick="gerarPDF()">Gerar PDF</button>
         </div>
-    </div>
+      </div>
+    
 </body>
 </html>
